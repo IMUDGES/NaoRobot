@@ -1,0 +1,15 @@
+C:\Users\acer\Desktop\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe.config
+C:\Users\acer\Desktop\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe
+C:\Users\acer\Desktop\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.pdb
+C:\Users\acer\Desktop\BodyBasics-WPF\bin\AnyCPU\Debug\Microsoft.Kinect.dll
+C:\Users\acer\Desktop\BodyBasics-WPF\bin\AnyCPU\Debug\Microsoft.Kinect.xml
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.csprojResolveAssemblyReference.cache
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\MainWindow.baml
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\MainWindow.g.cs
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\App.g.cs
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\BodyBasics-WPF_MarkupCompile.cache
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.g.resources
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\Microsoft.Samples.Kinect.BodyBasics.Properties.Resources.resources
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.exe
+C:\Users\acer\Desktop\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.pdb

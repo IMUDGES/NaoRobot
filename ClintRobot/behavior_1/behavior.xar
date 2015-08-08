@@ -20,10 +20,12 @@
                             <script language="4">
                                 <content>
                                     <![CDATA[import socket
+import almath
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
-
+        self.ISconet = False
+        self.motion = ALProxy("ALMotion")
     def onLoad(self):
         #put initialization code here
 
@@ -38,11 +40,17 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStop(self):
-        port=8001
-        host='10.0.1.134'
-        s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        s.sendto(b'hello,this is a test info !',(host,port))
-        self.msg = s.recv(1024)
+        if not  self.ISconet:
+            self.ISconet = True
+            self.port=8001
+            self.host='10.0.1.134'
+            self.s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+            self.s.sendto(b'hello,this is a test info !',(self.host,self.port))
+            self.msg = self.s.recv(1024)
+        else :
+
+            self.s.sendto(b'hello,this is a test info !',(self.host,self.port))
+            self.msg = self.s.recv(1024)
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
         self.onStopped(self.msg) #activate the output of the box]]>
 </content>
@@ -52,7 +60,7 @@ class MyClass(GeneratedClass):
                             <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
                             <Output name="onStopped" type="3" type_size="1" nature="1" inner="0" tooltip="指令盒行为结束时，送出信号。" id="4" />
                         </Box>
-                        <Box name="Say Text" id="2" localization="8" tooltip="Say the text received on its input." x="573" y="188">
+                        <Box name="Say Text" id="2" localization="8" tooltip="Say the text received on its input." x="353" y="254">
                             <bitmap>media/images/box/interaction/say.png</bitmap>
                             <script language="4">
                                 <content>
@@ -110,7 +118,7 @@ class MyClass(GeneratedClass):
                         </Box>
                         <Link inputowner="1" indexofinput="3" outputowner="0" indexofoutput="2" />
                         <Link inputowner="2" indexofinput="2" outputowner="1" indexofoutput="4" />
-                        <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
+                        <Link inputowner="1" indexofinput="3" outputowner="2" indexofoutput="4" />
                     </Diagram>
                 </BehaviorKeyframe>
             </BehaviorLayer>
