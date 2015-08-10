@@ -7,6 +7,7 @@
 namespace Microsoft.Samples.Kinect.BodyBasics
 {
     using System;
+    
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -115,7 +116,11 @@ using System.Threading;
         /// Width of display (depth space)
         /// </summary>
         private int displayWidth;
-
+        private static double lastPostoinZ = 0;
+        private static String Data;
+        private static double newPostoinZ;
+        static double[][] Alldata = new double[1000][];
+        static int num = 0;
         /// <summary>
         /// Height of display (depth space)
         /// </summary>
@@ -138,7 +143,6 @@ using System.Threading;
         {
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
-
             // get the coordinate mapper   获得坐标映射
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
 
@@ -148,7 +152,7 @@ using System.Threading;
             // get size of joint space  获取关节空间大小
             this.displayWidth = frameDescription.Width;
             this.displayHeight = frameDescription.Height;
-
+         
             // open the reader for the body frames
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
 
@@ -342,11 +346,40 @@ using System.Threading;
                             this.DrawClippedEdges(body, dc);
 
                             IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
-                            var handRight = body.Joints[JointType.HandRight].Position.Z;
-                            double hhandRight = (double)handRight;
+                            var spineMid = body.Joints[JointType.SpineMid];
+                            var Walkdata = body.Joints[JointType.SpineMid];
+                            double WalkdataX = Walkdata.Position.Z;
+                            double WalkdataY = Walkdata.Position.X;
+                            double WalkdataZ = Walkdata.Position.Y;
+                             num++;
+                                if(num%10==0)
+                                {
+                                    Alldata[num][0] = WalkdataX;
+                                    Alldata[num][1] = WalkdataY;
+                                    Alldata[num][2] = WalkdataZ;
+                                }
+                                if(num>1)
+                                {
+                                    
+                                    if ((Alldata[num - 1][0] -Alldata[num][0] <0.005)&& (Alldata[num - 1][1] -Alldata[num][1]<0.005) && (Alldata[num - 1][2] - Alldata[num][2]<0.005))
+                                    {
+                                       Data = string.Concat((Alldata[num][0] - Alldata[0][0]).ToString(), ',',(Alldata[num][1] - Alldata[0][1]).ToString(),',', (Alldata[num][2] - Alldata[0][2]).ToString());
+                                        
+                                    }
+                                    
+                                }
+                            
                             // convert the joint points to depth (display) space
                             Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
-
+                         /* if (lastPostoinZ==0)
+                         {
+                               lastPostoinZ = spineMid.Position.Z;
+                           }
+                          else
+                          {
+                                newPostoinZ = spineMid.Position.Z;
+                            }
+                            Data = (lastPostoinZ - newPostoinZ).ToString();*/
                             foreach (JointType jointType in joints.Keys)
                             {
                                 // sometimes the depth(Z) of an inferred joint may show as negative
@@ -383,6 +416,7 @@ using System.Threading;
         /// 
 
 
+        
         private void DrawBody(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, DrawingContext drawingContext, Pen drawingPen)
         {
             // Draw the bones
@@ -548,8 +582,8 @@ using System.Threading;
                 Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
 
                 //客户机连接成功后，发送信息
-                string welcome = "hello ! ";
-
+                string welcome = Data;
+             
                 //字符串与字节数组相互转换
                 data = Encoding.ASCII.GetBytes(welcome);
 
@@ -563,7 +597,9 @@ using System.Threading;
                 
                 recv = newsock.ReceiveFrom(data, ref Remote);
                 Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
+                data = Encoding.ASCII.GetBytes(Data);
                 newsock.SendTo(data, recv, SocketFlags.None, Remote);
+                lastPostoinZ = newPostoinZ;
             }
         }
     }
