@@ -117,10 +117,13 @@ using System.Threading;
         /// </summary>
         private int displayWidth;
         private static double lastPostoinZ = 0;
-        private static String Data;
+        private static String Data = "no";
         private static double newPostoinZ;
-        static double[][] Alldata = new double[1000][];
+        private static double newPostoinX;
+        private static double lastPostoinX = 0;
+        static double [,] Alldata = new double[1000,3];
         static int num = 0;
+        private static String OldData;
         /// <summary>
         /// Height of display (depth space)
         /// </summary>
@@ -351,35 +354,38 @@ using System.Threading;
                             double WalkdataX = Walkdata.Position.Z;
                             double WalkdataY = Walkdata.Position.X;
                             double WalkdataZ = Walkdata.Position.Y;
-                             num++;
-                                if(num%10==0)
+                            /*num++;
+                            if (num % 10 == 0)
+                            {
+                                Alldata[num, 0] = WalkdataX;
+                                Alldata[num, 1] = WalkdataY;
+                                Alldata[num, 2] = WalkdataZ;
+                                if (num > 1)
                                 {
-                                    Alldata[num][0] = WalkdataX;
-                                    Alldata[num][1] = WalkdataY;
-                                    Alldata[num][2] = WalkdataZ;
-                                }
-                                if(num>1)
-                                {
-                                    
-                                    if ((Alldata[num - 1][0] -Alldata[num][0] <0.005)&& (Alldata[num - 1][1] -Alldata[num][1]<0.005) && (Alldata[num - 1][2] - Alldata[num][2]<0.005))
+                                    if ((Alldata[num - 1, 0] - Alldata[num, 0] < 0.005) && (Alldata[num - 1, 1] - Alldata[num, 1] < 0.005) && (Alldata[num - 1, 2] - Alldata[num, 2] < 0.005))
                                     {
-                                       Data = string.Concat((Alldata[num][0] - Alldata[0][0]).ToString(), ',',(Alldata[num][1] - Alldata[0][1]).ToString(),',', (Alldata[num][2] - Alldata[0][2]).ToString());
-                                        
+                                        Data = string.Concat((Alldata[num,0] - Alldata[0,0]).ToString(),',', (Alldata[num,1] - Alldata[0,1]).ToString(), ',', Convert.ToDouble((Alldata[num, 2] - Alldata[0, 2])).ToString("0.0000");
                                     }
-                                    
                                 }
+                            }*/
                             
                             // convert the joint points to depth (display) space
                             Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
-                         /* if (lastPostoinZ==0)
-                         {
+                            if (lastPostoinZ==0&&lastPostoinX==0)
+                            {
                                lastPostoinZ = spineMid.Position.Z;
-                           }
-                          else
-                          {
-                                newPostoinZ = spineMid.Position.Z;
+                               lastPostoinX = spineMid.Position.X;
                             }
-                            Data = (lastPostoinZ - newPostoinZ).ToString();*/
+                            else
+                            {
+                                newPostoinZ = spineMid.Position.Z;
+                                newPostoinX = spineMid.Position.X;
+                            }
+                            if (Math.Abs(lastPostoinZ - newPostoinZ) > 0.03 && Math.Abs(lastPostoinX - newPostoinX) > 0.03)
+                            {
+                                Data = string.Concat((lastPostoinZ - newPostoinZ).ToString(), ',', (lastPostoinX - newPostoinX).ToString());
+                            }
+                            //Console.WriteLine((lastPostoinZ - newPostoinZ).ToString());
                             foreach (JointType jointType in joints.Keys)
                             {
                                 // sometimes the depth(Z) of an inferred joint may show as negative
@@ -392,7 +398,6 @@ using System.Threading;
                                 DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
                                 jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
                             }
-
                             this.DrawBody(joints, jointPoints, dc, drawPen);
 
                             this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
@@ -440,7 +445,6 @@ using System.Threading;
                 {
                     drawBrush = this.inferredJointBrush;
                 }
-
                 if (drawBrush != null)
                 {
                     drawingContext.DrawEllipse(drawBrush, null, jointPoints[jointType], JointThickness, JointThickness);
@@ -582,11 +586,11 @@ using System.Threading;
                 Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
 
                 //客户机连接成功后，发送信息
-                string welcome = Data;
+                string welcome = "no";
              
                 //字符串与字节数组相互转换
                 data = Encoding.ASCII.GetBytes(welcome);
-
+            
                 //发送信息
                 newsock.SendTo(data, data.Length, SocketFlags.None, Remote);
             
@@ -594,12 +598,17 @@ using System.Threading;
             {
                 data = new byte[1024];
                 //发送接收信息
-                
                 recv = newsock.ReceiveFrom(data, ref Remote);
                 Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
                 data = Encoding.ASCII.GetBytes(Data);
-                newsock.SendTo(data, recv, SocketFlags.None, Remote);
                 lastPostoinZ = newPostoinZ;
+                lastPostoinX = newPostoinX;
+                OldData = Data;
+                newsock.SendTo(data,data.Length, SocketFlags.None, Remote);
+                Console.WriteLine(Encoding.ASCII.GetString(data));
+                //num = 0;
+                Data = "no";
+                Thread.Sleep(1000);
             }
         }
     }

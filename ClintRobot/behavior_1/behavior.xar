@@ -15,7 +15,7 @@
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
                     <Diagram scale="84.0896">
-                        <Box name="test1" id="1" localization="8" tooltip="" x="224" y="58">
+                        <Box name="test1" id="1" localization="8" tooltip="" x="343" y="281">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
@@ -48,7 +48,6 @@ class MyClass(GeneratedClass):
             self.s.sendto(b'hello,this is a test info !',(self.host,self.port))
             self.msg = self.s.recv(1024)
         else :
-
             self.s.sendto(b'hello,this is a test info !',(self.host,self.port))
             self.msg = self.s.recv(1024)
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
@@ -60,7 +59,7 @@ class MyClass(GeneratedClass):
                             <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
                             <Output name="onStopped" type="3" type_size="1" nature="1" inner="0" tooltip="指令盒行为结束时，送出信号。" id="4" />
                         </Box>
-                        <Box name="test" id="3" localization="8" tooltip="" x="442" y="294">
+                        <Box name="test" id="3" localization="8" tooltip="" x="365" y="39">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
@@ -78,9 +77,11 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStart(self, p):
-        #self.onStopped() #activate the output of the box
-        self.motion.setMoveArmsEnabled(True, True)
-        self.motion.moveTo(float(p),0.0,1* almath.PI / 180)
+         #activate the output of the bo
+        if p != "no"and p!='System.Byte[]':
+            self.motion.setMoveArmsEnabled(True, True)
+            self.motion.moveTo(float(p.split(',')[0]),float(p.split(',')[1]),1* almath.PI / 180)
+        self.onStopped()
         pass
 
     def onInput_onStop(self):
@@ -95,7 +96,7 @@ class MyClass(GeneratedClass):
                         </Box>
                         <Link inputowner="1" indexofinput="3" outputowner="0" indexofoutput="2" />
                         <Link inputowner="3" indexofinput="2" outputowner="1" indexofoutput="4" />
-                        <Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="4" />
+                        <Link inputowner="1" indexofinput="3" outputowner="3" indexofoutput="4" />
                     </Diagram>
                 </BehaviorKeyframe>
             </BehaviorLayer>

@@ -15,7 +15,7 @@
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
                     <Diagram>
-                        <Box name="setanb" id="2" localization="8" tooltip="" x="375" y="212">
+                        <Box name="setanb" id="2" localization="8" tooltip="" x="372" y="208">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
