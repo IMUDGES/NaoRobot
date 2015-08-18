@@ -598,7 +598,7 @@ using System.Threading;
             {
                 data = new byte[1024];
                 //发送接收信息
-                recv = newsock.ReceiveFrom(data, ref Remote);
+                recv = newsock.ReceiveFrom(data, ref Remote);  
                 Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
                 data = Encoding.ASCII.GetBytes(Data);
                 lastPostoinZ = newPostoinZ;
@@ -608,7 +608,7 @@ using System.Threading;
                 Console.WriteLine(Encoding.ASCII.GetString(data));
                 //num = 0;
                 Data = "no";
-                Thread.Sleep(1000);
+                Thread.Sleep(1000); 
             }
         }
     }
