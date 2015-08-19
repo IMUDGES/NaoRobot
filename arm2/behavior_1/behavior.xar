@@ -72,18 +72,20 @@
 
     # Example showing body zero position
     # Instead of listing each joint, you can use a the name "Body"
-        names  = "Body"
+        names  = "LShoulderPitch"
+       # names  = "LShoulderRoll"
+        #names  = "LElbowYaw"
+         #names  = "LElbowRoll"
     # We still need to specify the correct number of target angles, so
     # we need to find the number of joints that this Nao has.
     # Here we are using the getBodyNames method, which tells us all
     # the names of the joints in the alias "Body".
     # We could have used this list for the "names" parameter.
-        numJoints = len(self.motionProxy.getBodyNames("Body"))
+        numJoints = 1;
     # Make a list of the correct length. All angles are zero.
         targetAngles  = [0.0]*numJoints
     # Using 10% of maximum joint speed
         maxSpeedFraction  = 0.1
-
         self.motionProxy.angleInterpolationWithSpeed(names, targetAngles, maxSpeedFraction)
 
         pass
